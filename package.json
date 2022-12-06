@@ -1,0 +1,26 @@
+{
+    "name": "igse_energy_tool_backend",
+    "version": "1.0.0",
+    "description": "",
+    "main": "app.js",
+    "scripts": {
+        "test": "echo \"Error: no test specified\" && exit 1",
+        "start": "node app.js",
+        "dev": "nodemon app.js"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+ssh://git@github.com/AakashChahal/igse_energy_tool_backend.git"
+    },
+    "author": "Aakash Chahal",
+    "license": "ISC",
+    "bugs": {
+        "url": "https://github.com/AakashChahal/igse_energy_tool_backend/issues"
+    },
+    "homepage": "https://github.com/AakashChahal/igse_energy_tool_backend#readme",
+    "dependencies": {
+        "cors": "^2.8.5",
+        "express": "^4.18.2",
+        "nodemon": "^2.0.20"
+    }
+}

@@ -3,6 +3,12 @@
     "version": "1.0.0",
     "description": "",
     "main": "app.js",
+    "devServer": {
+        "allowedHosts": [
+            "http://localhost:8080",
+            "http://localhost:3000"
+        ]
+    },
     "scripts": {
         "test": "echo \"Error: no test specified\" && exit 1",
         "start": "node app.js",

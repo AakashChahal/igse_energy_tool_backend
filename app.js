@@ -56,6 +56,14 @@ app.use("/igse/propertycount", (req, res) => {
     });
 });
 
+app.use((err, req, res, next) => {
+    const errorStatus = err.statusCode || 500;
+    const errorMessage = err.message || "Something went wrong";
+    return res
+        .status(errorStatus)
+        .json({ success: false, message: errorMessage, status: errorStatus });
+});
+
 app.listen(8080, () => {
     connect();
 });

@@ -1,15 +1,24 @@
-const express = require("express");
-const cors = require("cors");
-const firebase = require("firebase/app");
-const { getDatabase, ref, set } = require("firebase/database");
-const {
+import express from "express";
+import * as firebase from "firebase/app";
+import { getDatabase, ref, set } from "firebase/database";
+import {
     getAuth,
     createUserWithEmailAndPassword,
     signInWithEmailAndPassword,
-} = require("firebase/auth");
+} from "firebase/auth";
+import cors from "cors";
+import dotenv from "dotenv";
+
+import authRoute from "./routes/auth.js";
+import readingRoute from "./routes/reading.js";
+import tariffRoute from "./routes/tariff.js";
+import evcRoute from "./routes/voucher.js";
+import userRoute from "./routes/users.js";
+
+dotenv.config();
 const app = express();
 
-const firebaseConfig = {
+export const firebaseConfig = {
     apiKey: "AIzaSyAF57fDJpxBjL2OS4R1x7vHNxGOaugdOeY",
     authDomain: "igse-energy-tool.firebaseapp.com",
     databaseURL: "https://igse-energy-tool-default-rtdb.firebaseio.com",
@@ -20,143 +29,33 @@ const firebaseConfig = {
     measurementId: "G-YGQ5LCHR41",
 };
 
-const firebaseApp = firebase.initializeApp(firebaseConfig);
-const database = getDatabase(firebaseApp);
-const auth = getAuth();
-
-app.use(cors());
-app.use(express.json());
-
-app.get("/", (req, res) => {
-    // res.send("Hello World!");
-    console.log("Connected to the frontend");
-    res.redirect("/login");
-});
-
-app.post("/login", (req, res) => {
-    const { email, password } = req.body;
-    let userCredentials;
-    async function loginUser() {
-        userCredentials = await signInWithEmailAndPassword(
-            auth,
-            email,
-            password
-        );
-    }
-    loginUser()
-        .then(() => {
-            console.log("User Logged In Successfully");
-            console.log("email: ", email);
-            console.log("password: ", password);
-            res.json({
-                email: email,
-                password: password,
-                user: userCredentials.user,
-            });
-        })
-        .catch((error) => {
-            console.log("Error Occured while logging in the user: ", error);
-            res.status(500).send({
-                message: "Error Occured while logging in the user",
-                status: 500,
-            });
-        });
-});
-
-app.get("/login", (req, res) => {
-    res.send({
-        message: "Login Page",
-        status: 200,
-    });
-});
-
-// app.get("/register", (req, res) => {
-//     res.send({
-//         message: "Register Page",
-//         status: 200,
-//     });
-// });
-
-app.post("/register", (req, res) => {
-    const {
-        email,
-        password,
-        firstName,
-        lastName,
-        propertyType,
-        numBedrooms,
-        address,
-        evc,
-    } = req.body;
-    const user = {
-        customer_id: email,
-        password,
-        firstName,
-        lastName,
-        propertyType,
-        numBedrooms,
-        address,
-        evc,
-    };
-
+export const connect = async () => {
     try {
-        async function registerUser() {
-            const userCredentials = await createUserWithEmailAndPassword(
-                auth,
-                email,
-                password
-            );
-        }
-        registerUser()
-            .then(() => {
-                set(
-                    ref(
-                        database,
-                        `/customers/${user.firstName + "_" + lastName}`
-                    ),
-                    user
-                )
-                    .then(() => {
-                        console.log("Database Updated Successfully");
-                        res.redirect("/dashboard");
-                    })
-                    .catch((error) => {
-                        console.log(
-                            "Error Occured while storing data: ",
-                            error
-                        );
-                        res.send({
-                            message: "Error Occured while storing data",
-                            status: 500,
-                        });
-                    });
-            })
-            .catch((error) => {
-                console.log(
-                    "Error Occured while registering the user: ",
-                    error
-                );
-                res.send({
-                    message: "Error Occured while registering the user",
-                    status: 500,
-                });
-            });
-
-        // res.redirect("/dashboard");
-    } catch (error) {
-        console.error("Error Occured while registering the user: ", error);
-        res.send({
-            message: "Error Occured while registering the user",
-            status: 500,
-        });
+        const firebaseApp = firebase.initializeApp(firebaseConfig);
+        const database = getDatabase(firebaseApp);
+        const auth = getAuth();
+    } catch (err) {
+        console.log(err);
     }
-});
+};
 
-app.get("/dashboard", (req, res) => {
+// middleware
+app.use(express.json());
+app.use(cors());
+
+app.use("/api/auth", authRoute);
+app.use("/api/users", userRoute);
+app.use("/api/evc", evcRoute);
+app.use("/api/bill", readingRoute);
+app.use("/api/tariff", tariffRoute);
+
+app.use("/igse/propertycount", (req, res) => {
     res.send({
-        message: "Dashboard Page",
-        status: 200,
+        propertyCount: 100,
+        message: "Not yet implemented",
     });
 });
 
-app.listen(8080, console.log("Server is ready!"));
+app.listen(8080, () => {
+    connect();
+});

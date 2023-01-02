@@ -14,6 +14,7 @@ import readingRoute from "./routes/reading.js";
 import tariffRoute from "./routes/tariff.js";
 import evcRoute from "./routes/voucher.js";
 import userRoute from "./routes/users.js";
+import cookieParser from "cookie-parser";
 
 dotenv.config();
 const app = express();
@@ -40,6 +41,7 @@ export const connect = async () => {
 };
 
 // middleware
+app.use(cookieParser());
 app.use(express.json());
 app.use(cors());
 

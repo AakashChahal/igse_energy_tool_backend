@@ -6,6 +6,7 @@ import {
     signInWithEmailAndPassword,
 } from "firebase/auth";
 import { connect, firebaseConfig } from "../app.js";
+import jwt from "jsonwebtoken";
 
 import User from "../models/user.js";
 
@@ -83,12 +84,23 @@ export const login = async (req, res, next) => {
             );
 
             const isAdmin = user.val().type === "admin";
+            const token = jwt.sign(
+                {
+                    id: user.val()["customer_id"],
+                    isAdmin: isAdmin,
+                },
+                process.env.JWT
+            );
 
-            res.status(200).json({
-                message: "User logged in",
-                user: { ...user.val() },
-                isAdmin,
-            });
+            res.cookie("access_token", token, {
+                httpOnly: true,
+            })
+                .status(200)
+                .json({
+                    message: "User logged in",
+                    user: { ...user.val() },
+                    isAdmin,
+                });
         } else {
             next(new Error("User doesn't exist"));
         }

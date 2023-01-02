@@ -31,20 +31,28 @@ export const firebaseConfig = {
     measurementId: "G-YGQ5LCHR41",
 };
 
-export const connect = async () => {
-    try {
-        const firebaseApp = firebase.initializeApp(firebaseConfig);
-        const database = getDatabase(firebaseApp);
-        const auth = getAuth();
-    } catch (err) {
-        console.log(err);
-    }
-};
-
 // middleware
 app.use(cookieParser());
 app.use(express.json());
 app.use(cors());
+
+app.get("/", (req, res) => {
+    res.status(200).json({
+        message: "Welcome to IGSE Energy Tool",
+        availableAPIs: [
+            {
+                name: "auth",
+                description:
+                    "Authentication API to authenticate users making requests and signing/registering",
+            },
+            { name: "users", description: "User API" },
+            { name: "evc", description: "EVC API" },
+            { name: "reading", description: "Readings (Meter Reading) API" },
+            { name: "tariff", description: "Tariff API" },
+            { name: "igse", description: "IGSE API only accessible by admin" },
+        ],
+    });
+});
 
 app.use("/api/auth", authRoute);
 app.use("/api/users", userRoute);
@@ -64,5 +72,5 @@ app.use((err, req, res, next) => {
 });
 
 app.listen(8080, () => {
-    connect();
+    console.log("Server is running on port 8080");
 });

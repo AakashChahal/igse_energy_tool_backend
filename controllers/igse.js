@@ -1,7 +1,7 @@
 import * as firebase from "firebase/app";
 import { getDatabase, ref, set, get } from "firebase/database";
 import { getAuth } from "firebase/auth";
-import { connect, firebaseConfig } from "../app.js";
+import { firebaseConfig } from "../app.js";
 import { createError } from "../utils/error.js";
 
 export const countProperties = async (req, res, next) => {

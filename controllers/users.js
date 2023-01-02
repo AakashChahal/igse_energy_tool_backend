@@ -2,7 +2,7 @@ import Tariff from "../models/Tariff.js";
 import * as firebase from "firebase/app";
 import { getDatabase, ref, set, get } from "firebase/database";
 import { getAuth } from "firebase/auth";
-import { connect, firebaseConfig } from "../app.js";
+import { firebaseConfig } from "../app.js";
 
 export const updateUser = async (req, res, next) => {
     const user = req.params.customer_id.split("@")[0].replace(/[.#$\\]/g, "_");

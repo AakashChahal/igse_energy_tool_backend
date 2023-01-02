@@ -2,7 +2,7 @@ import Tariff from "../models/Tariff.js";
 import * as firebase from "firebase/app";
 import { getDatabase, ref, set, get } from "firebase/database";
 import { getAuth } from "firebase/auth";
-import { connect, firebaseConfig } from "../app.js";
+import { firebaseConfig } from "../app.js";
 
 export const createTariff = async (req, res, next) => {
     const newTariff = new Tariff(req.body.tariff_type, req.body.rate);

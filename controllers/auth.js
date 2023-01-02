@@ -5,7 +5,7 @@ import {
     createUserWithEmailAndPassword,
     signInWithEmailAndPassword,
 } from "firebase/auth";
-import { connect, firebaseConfig } from "../app.js";
+import { firebaseConfig } from "../app.js";
 import jwt from "jsonwebtoken";
 import bcrypt from "bcryptjs";
 import crypto from "crypto";

@@ -3,7 +3,7 @@ import { createError } from "../utils/error.js";
 import * as firebase from "firebase/app";
 import { getDatabase, ref, set, get } from "firebase/database";
 import { getAuth } from "firebase/auth";
-import { connect, firebaseConfig } from "../app.js";
+import {  firebaseConfig } from "../app.js";
 
 export const createReading = async (req, res, next) => {
     const reading = { ...req.body, customer_id: req.params.customer_id };

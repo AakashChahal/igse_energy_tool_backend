@@ -7,6 +7,8 @@ import {
 } from "firebase/auth";
 import { connect, firebaseConfig } from "../app.js";
 import jwt from "jsonwebtoken";
+import bcrypt from "bcryptjs";
+import crypto from "crypto";
 
 import User from "../models/user.js";
 
@@ -23,9 +25,13 @@ export const register = async (req, res, next) => {
         type,
     } = req.body;
     try {
+        const hashedPassword = crypto
+            .createHash("sha256")
+            .update(password)
+            .digest("hex");
         const user = new User(
             customer_id,
-            password,
+            hashedPassword,
             address,
             property_type,
             num_bedroom,

@@ -14,6 +14,7 @@ import readingRoute from "./routes/reading.js";
 import tariffRoute from "./routes/tariff.js";
 import evcRoute from "./routes/voucher.js";
 import userRoute from "./routes/users.js";
+import igseRoute from "./routes/igse.js";
 import cookieParser from "cookie-parser";
 
 dotenv.config();
@@ -48,15 +49,11 @@ app.use(cors());
 app.use("/api/auth", authRoute);
 app.use("/api/users", userRoute);
 app.use("/api/evc", evcRoute);
-app.use("/api/bill", readingRoute);
+app.use("/api/reading", readingRoute);
 app.use("/api/tariff", tariffRoute);
 
-app.use("/igse/propertycount", (req, res) => {
-    res.send({
-        propertyCount: 100,
-        message: "Not yet implemented",
-    });
-});
+// admin api routes
+app.use("/igse", igseRoute);
 
 app.use((err, req, res, next) => {
     const errorStatus = err.statusCode || 500;

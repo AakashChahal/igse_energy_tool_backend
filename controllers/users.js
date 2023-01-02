@@ -11,12 +11,12 @@ export const updateUser = async (req, res, next) => {
         const firebaseApp = firebase.initializeApp(firebaseConfig);
         const database = getDatabase(firebaseApp);
         const auth = getAuth();
-        const dbRef = ref(database, `tariffs/${tariff_type}`);
-        await set(dbRef, updatedTariff);
+        const dbRef = ref(database, `customers/${user}`);
+        await set(dbRef, updatedUser);
 
         res.status(200).json({
             message: "Tariff updated",
-            tariff: { ...updatedTariff },
+            tariff: { ...updatedUser },
         });
     } catch (err) {
         next(err);
@@ -51,7 +51,7 @@ export const getUser = async (req, res, next) => {
         if (snapshot.exists()) {
             res.status(200).json({
                 message: "User found",
-                tariff: snapshot.val(),
+                user: snapshot.val(),
             });
         } else {
             res.status(404).json({
@@ -73,7 +73,7 @@ export const getUsers = async (req, res, next) => {
         if (snapshot.exists()) {
             res.status(200).json({
                 message: "Users found",
-                tariffs: snapshot.val(),
+                users: snapshot.val(),
             });
         } else {
             res.status(404).json({

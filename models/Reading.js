@@ -10,6 +10,7 @@ class Reading {
     ) {
         this.reading_id = reading_id;
         this.customer_id = customer_id;
+        this.reading_id = reading_id;
         this.submission_date = submission_date;
         this.elec_reading_day = elec_reading_day;
         this.elec_reading_night = elec_reading_night;
@@ -21,3 +22,5 @@ class Reading {
         this.status = status;
     }
 }
+
+export default Reading;

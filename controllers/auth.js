@@ -103,9 +103,7 @@ export const login = async (req, res, next) => {
             })
                 .status(200)
                 .json({
-                    message: "User logged in",
-                    user: { ...user.val() },
-                    isAdmin,
+                    user: { ...user.val(), isAdmin: isAdmin },
                 });
         } else {
             next(new Error("User doesn't exist"));

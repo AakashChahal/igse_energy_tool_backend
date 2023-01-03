@@ -6,9 +6,10 @@ import {
     createUserWithEmailAndPassword,
     signInWithEmailAndPassword,
 } from "firebase/auth";
-import cors from "cors";
+// import cors from "cors";
 import dotenv from "dotenv";
 
+import adminRoutes from "./routes/admin.js";
 import authRoute from "./routes/auth.js";
 import readingRoute from "./routes/reading.js";
 import tariffRoute from "./routes/tariff.js";
@@ -34,7 +35,7 @@ export const firebaseConfig = {
 // middleware
 app.use(cookieParser());
 app.use(express.json());
-app.use(cors());
+// app.use(cors());
 
 app.get("/", (req, res) => {
     res.status(200).json({
@@ -54,11 +55,15 @@ app.get("/", (req, res) => {
     });
 });
 
+// api routes
 app.use("/api/auth", authRoute);
 app.use("/api/users", userRoute);
 app.use("/api/evc", evcRoute);
 app.use("/api/reading", readingRoute);
 app.use("/api/tariff", tariffRoute);
+
+// admin routes
+app.use("/admin", adminRoutes);
 
 // admin api routes
 app.use("/igse", igseRoute);

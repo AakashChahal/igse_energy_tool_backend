@@ -68,7 +68,7 @@ export const register = async (req, res, next) => {
 };
 
 export const login = async (req, res, next) => {
-    const { customer_id, password } = req.body;
+    const { customer_id, password, forAdmin = false } = req.body;
     try {
         const firebaseApp = firebase.initializeApp(firebaseConfig);
         const database = getDatabase(firebaseApp);
@@ -90,21 +90,50 @@ export const login = async (req, res, next) => {
             );
 
             const isAdmin = user.val().type === "admin";
-            const token = jwt.sign(
-                {
-                    id: user.val()["customer_id"],
-                    isAdmin: isAdmin,
-                },
-                process.env.JWT
-            );
+            if (!forAdmin) {
+                if (user.val().type === "admin") {
+                    res.status(300).json({
+                        message: "User is an admin, go to /admin/login",
+                    });
+                }
+                const token = jwt.sign(
+                    {
+                        id: user.val()["customer_id"],
+                        isAdmin: isAdmin || false,
+                    },
+                    process.env.JWT
+                );
 
-            res.cookie("access_token", token, {
-                httpOnly: true,
-            })
-                .status(200)
-                .json({
-                    user: { ...user.val(), isAdmin: isAdmin },
-                });
+                res.cookie("access_token", token, {
+                    httpOnly: true,
+                })
+                    .status(200)
+                    .json({
+                        user: { ...user.val(), isAdmin: isAdmin },
+                    });
+            } else {
+                if (user.val().type === "admin") {
+                    const token = jwt.sign(
+                        {
+                            id: user.val()["customer_id"],
+                            isAdmin: true,
+                        },
+                        process.env.JWT
+                    );
+
+                    res.cookie("access_token", token, {
+                        httpOnly: true,
+                    })
+                        .status(200)
+                        .json({
+                            user: { ...user.val(), isAdmin: true },
+                        });
+                } else {
+                    res.status(300).json({
+                        message: "User is not an admin, go to /login",
+                    });
+                }
+            }
         } else {
             next(new Error("User doesn't exist"));
         }

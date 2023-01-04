@@ -1,6 +1,7 @@
 import express from "express";
 import { calcEnergy, countProperties } from "../controllers/igse.js";
 import { verifyAdmin } from "../utils/verifyToken.js";
+import { login } from "../controllers/auth.js";
 
 const router = express.Router();
 
@@ -14,5 +15,7 @@ router.get("/home", (req, res, next) => {
         ],
     });
 });
+
+router.post("/login", login);
 
 export default router;

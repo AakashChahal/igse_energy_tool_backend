@@ -21,15 +21,19 @@ export const register = async (req, res, next) => {
         address,
         property_type,
         num_bedroom,
-        balance,
+        evc,
         type,
-    } = req.body;
+    } = { ...req.body };
     try {
         const hashedPassword = crypto
             .createHash("sha256")
             .update(password)
             .digest("hex");
+
+        const balance = evc ? 200 : 0;
         const user = new User(
+            first_name,
+            last_name,
             customer_id,
             hashedPassword,
             address,
@@ -47,6 +51,7 @@ export const register = async (req, res, next) => {
             customer_id,
             password
         );
+
         if (userCredential) {
             const dbRef = ref(
                 database,

@@ -14,6 +14,7 @@ const router = express.Router();
 router.post("/", verifyAdmin, createTariff);
 // UPDATE
 router.put("/:tariff_type", verifyAdmin, updateTariff);
+
 // DELETE
 router.delete("/:tariff_type", verifyAdmin, deleteTariff);
 

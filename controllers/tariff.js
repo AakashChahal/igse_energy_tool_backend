@@ -5,43 +5,55 @@ import { getAuth } from "firebase/auth";
 import { firebaseConfig } from "../app.js";
 
 export const createTariff = async (req, res, next) => {
-    const newTariff = new Tariff(req.body.tariff_type, req.body.rate);
-    try {
-        const firebaseApp = firebase.initializeApp(firebaseConfig);
-        const database = getDatabase(firebaseApp);
-        const auth = getAuth();
-        const dbRef = ref(database, `tariffs/${newTariff.tariff_type}`);
-        await set(dbRef, newTariff);
-
-        res.status(200).json({
+    const tariffs = req.body;
+    let flag = false;
+    for (const [tariff_type, rate] of Object.entries(tariffs)) {
+        if (rate != "") {
+            const newTariff = new Tariff(tariff_type, rate);
+            try {
+                const firebaseApp = firebase.initializeApp(firebaseConfig);
+                const database = getDatabase(firebaseApp);
+                const auth = getAuth();
+                const dbRef = ref(database, `tariffs/${tariff_type}`);
+                await set(dbRef, newTariff);
+            } catch (err) {
+                next(err);
+            }
+        } else {
+            flag = true;
+            break;
+        }
+    }
+    if (!flag) {
+        res.status(201).json({
             message: "Tariff created",
-            tariff: { ...newTariff },
+            tariffs: { ...tariffs },
         });
-    } catch (err) {
-        next(err);
+    } else {
+        res.status(400).json({
+            message: "Invalid request",
+        });
     }
 };
 
 export const updateTariff = async (req, res, next) => {
-    const tariff_type = req.params.tariff_type;
-    const updatedTariff = new Tariff(
-        req.body.tariff_type || tariff_type,
-        req.body.rate
-    );
-    try {
-        const firebaseApp = firebase.initializeApp(firebaseConfig);
-        const database = getDatabase(firebaseApp);
-        const auth = getAuth();
-        const dbRef = ref(database, `tariffs/${tariff_type}`);
-        await set(dbRef, updatedTariff);
-
-        res.status(200).json({
-            message: "Tariff updated",
-            tariff: { ...updatedTariff },
-        });
-    } catch (err) {
-        next(err);
+    for ([tariff_type, rate] of Object.entries(req.body)) {
+        if (rate != "") {
+            const updatedTariff = new Tariff(tariff_type, rate);
+            try {
+                const firebaseApp = firebase.initializeApp(firebaseConfig);
+                const database = getDatabase(firebaseApp);
+                const auth = getAuth();
+                const dbRef = ref(database, `tariffs/${tariff_type}`);
+                await set(dbRef, updatedTariff);
+            } catch (err) {
+                next(err);
+            }
+        }
     }
+    res.status(200).json({
+        message: "Tariff updated",
+    });
 };
 
 export const deleteTariff = async (req, res, next) => {

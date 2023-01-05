@@ -1,5 +1,7 @@
 class User {
     constructor(
+        first_name,
+        last_name,
         customer_id,
         password,
         address,
@@ -8,6 +10,7 @@ class User {
         balance,
         type
     ) {
+        this.full_name = first_name + " " + last_name;
         this.customer_id = customer_id;
         this.password = password;
         this.address = address;

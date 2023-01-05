@@ -1,4 +1,3 @@
-import Tariff from "../models/Tariff.js";
 import * as firebase from "firebase/app";
 import { getDatabase, ref, set, get } from "firebase/database";
 import { getAuth } from "firebase/auth";
@@ -16,7 +15,7 @@ export const updateUser = async (req, res, next) => {
 
         res.status(200).json({
             message: "Tariff updated",
-            tariff: { ...updatedUser },
+            user: { ...updatedUser },
         });
     } catch (err) {
         next(err);

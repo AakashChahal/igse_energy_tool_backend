@@ -8,6 +8,7 @@ class Reading {
         gas_reading,
         status
     ) {
+        this.full_name = first_name + " " + last_name;
         this.reading_id = reading_id;
         this.customer_id = customer_id;
         this.reading_id = reading_id;

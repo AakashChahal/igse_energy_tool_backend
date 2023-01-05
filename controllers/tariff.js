@@ -31,13 +31,14 @@ export const createTariff = async (req, res, next) => {
         });
     } else {
         res.status(400).json({
-            message: "Invalid request",
+            message: "Invalid request in creation of tariff",
         });
     }
 };
 
 export const updateTariff = async (req, res, next) => {
-    for ([tariff_type, rate] of Object.entries(req.body)) {
+    let count = 0;
+    for (const [tariff_type, rate] of Object.entries(req.body)) {
         if (rate != "") {
             const updatedTariff = new Tariff(tariff_type, rate);
             try {
@@ -49,11 +50,19 @@ export const updateTariff = async (req, res, next) => {
             } catch (err) {
                 next(err);
             }
+        } else {
+            count++;
         }
     }
-    res.status(200).json({
-        message: "Tariff updated",
-    });
+    if (count == Object.keys(req.body).length) {
+        res.status(400).json({
+            message: "Invalid request in updation of tariff",
+        });
+    } else {
+        res.status(200).json({
+            message: "Tariff updated",
+        });
+    }
 };
 
 export const deleteTariff = async (req, res, next) => {

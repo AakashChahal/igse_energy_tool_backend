@@ -3,8 +3,6 @@ class Voucher {
         this.evc_code = evc_code;
         this.used = used;
     }
-
-    useVoucher() {
-        this.used = true;
-    }
 }
+
+export default Voucher;

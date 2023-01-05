@@ -100,22 +100,23 @@ export const login = async (req, res, next) => {
                     res.status(300).json({
                         message: "User is an admin, go to /admin/login",
                     });
-                }
-                const token = jwt.sign(
-                    {
-                        id: user.val()["customer_id"],
-                        isAdmin: isAdmin || false,
-                    },
-                    process.env.JWT
-                );
+                } else {
+                    const token = jwt.sign(
+                        {
+                            id: user.val()["customer_id"],
+                            isAdmin: isAdmin || false,
+                        },
+                        process.env.JWT
+                    );
 
-                res.cookie("access_token", token, {
-                    httpOnly: true,
-                })
-                    .status(200)
-                    .json({
-                        user: { ...user.val(), isAdmin: isAdmin },
-                    });
+                    res.cookie("access_token", token, {
+                        httpOnly: true,
+                    })
+                        .status(200)
+                        .json({
+                            user: { ...user.val(), isAdmin: isAdmin },
+                        });
+                }
             } else {
                 if (user.val().type === "admin") {
                     const token = jwt.sign(

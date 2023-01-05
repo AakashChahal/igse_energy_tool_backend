@@ -10,7 +10,7 @@ import { verifyUser, verifyAdmin } from "../utils/verifyToken.js";
 const router = express.Router();
 
 // CREATE
-router.post("/:customer_id", verifyUser, createReading);
+router.post("/", verifyUser, createReading);
 
 // DELETE
 // router.delete("/:customer_id:reading_date", verifyUser, deleteReading);

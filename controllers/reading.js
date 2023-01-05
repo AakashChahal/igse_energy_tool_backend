@@ -3,13 +3,13 @@ import { createError } from "../utils/error.js";
 import * as firebase from "firebase/app";
 import { getDatabase, ref, set, get } from "firebase/database";
 import { getAuth } from "firebase/auth";
-import {  firebaseConfig } from "../app.js";
+import { firebaseConfig } from "../app.js";
 
 export const createReading = async (req, res, next) => {
-    const reading = { ...req.body, customer_id: req.params.customer_id };
+    const reading = { ...req.body };
 
     try {
-        const newReading = new Reading({ ...reading })["reading_id"];
+        const newReading = new Reading({ ...reading })["customer_id"];
         const firebaseApp = firebase.initializeApp(firebaseConfig);
         const database = getDatabase(firebaseApp);
         const auth = getAuth();
@@ -17,9 +17,11 @@ export const createReading = async (req, res, next) => {
             database,
             `readings/${newReading.customer_id
                 .split("@")[0]
-                .replace(/[.#$\\]/g, "_")}/${newReading.reading_id}`
+                .replace(/[.#$\\]/g, "_")}/${newReading.submission_date}`
         );
-        await set(dbRef, newReading);
+        const key = dbRef.push();
+        newReading.reading_id = key.key;
+        await set(dbRef, { ...newReading });
         res.status(200).json({
             message: "Reading created",
             reading: { ...newReading },

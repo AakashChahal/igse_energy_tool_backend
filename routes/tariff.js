@@ -12,8 +12,9 @@ const router = express.Router();
 
 // CREATE
 router.post("/", verifyAdmin, createTariff);
+
 // UPDATE
-router.put("/:tariff_type", verifyAdmin, updateTariff);
+router.put("/", verifyAdmin, updateTariff);
 
 // DELETE
 router.delete("/:tariff_type", verifyAdmin, deleteTariff);

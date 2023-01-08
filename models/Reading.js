@@ -1,4 +1,6 @@
 class Reading {
+    // declare a static variable to keep track of the number of readings
+
     constructor(
         customer_id,
         submission_date,

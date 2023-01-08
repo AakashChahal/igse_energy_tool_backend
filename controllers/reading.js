@@ -13,14 +13,25 @@ export const createReading = async (req, res, next) => {
         const firebaseApp = firebase.initializeApp(firebaseConfig);
         const database = getDatabase(firebaseApp);
         const auth = getAuth();
-        const dbRef = ref(
+        let dbRef = ref(
             database,
             `readings/${newReading.customer_id
                 .split("@")[0]
-                .replace(/[.#$\\]/g, "_")}/${newReading.submission_date}`
+                .replace(/[.#$\\]/g, "_")}/`
         );
-        const key = dbRef.push();
-        newReading.reading_id = key.key;
+        const snapshot = await get(dbRef);
+        if (snapshot.exists()) {
+            const reading_id = snapshot.val().length;
+            newReading.reading_id = reading_id;
+        } else {
+            newReading.reading_id = 1;
+        }
+        dbRef = ref(
+            database,
+            `readings/${newReading.customer_id
+                .split("@")[0]
+                .replace(/[.#$\\]/g, "_")}/${newReading.reading_id}`
+        );
         await set(dbRef, { ...newReading });
         res.status(200).json({
             message: "Reading created",

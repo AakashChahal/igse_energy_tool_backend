@@ -1,12 +1,5 @@
 import express from "express";
-import * as firebase from "firebase/app";
-import { getDatabase, ref, set } from "firebase/database";
-import {
-    getAuth,
-    createUserWithEmailAndPassword,
-    signInWithEmailAndPassword,
-} from "firebase/auth";
-// import cors from "cors";
+import cors from "cors";
 import dotenv from "dotenv";
 
 import adminRoutes from "./routes/admin.js";
@@ -16,6 +9,7 @@ import tariffRoute from "./routes/tariff.js";
 import evcRoute from "./routes/voucher.js";
 import userRoute from "./routes/users.js";
 import igseRoute from "./routes/igse.js";
+import statsRoute from "./routes/stats.js";
 import cookieParser from "cookie-parser";
 
 dotenv.config();
@@ -35,7 +29,7 @@ export const firebaseConfig = {
 // middleware
 app.use(cookieParser());
 app.use(express.json());
-// app.use(cors());
+app.use(cors());
 
 app.get("/", (req, res) => {
     res.status(200).json({
@@ -61,6 +55,7 @@ app.use("/api/users", userRoute);
 app.use("/api/evc", evcRoute);
 app.use("/api/reading", readingRoute);
 app.use("/api/tariff", tariffRoute);
+app.use("/api/stats", statsRoute);
 
 // admin routes
 app.use("/admin", adminRoutes);

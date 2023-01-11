@@ -1,6 +1,7 @@
 import express from "express";
 import cors from "cors";
 import dotenv from "dotenv";
+import { createProxyMiddleware } from "http-proxy-middleware";
 
 import adminRoutes from "./routes/admin.js";
 import authRoute from "./routes/auth.js";
@@ -30,6 +31,21 @@ export const firebaseConfig = {
 app.use(cookieParser());
 app.use(express.json());
 app.use(cors());
+app.use(
+    createProxyMiddleware("/api", {
+        target: "https://igse-energy-tool-frontend.vercel.app",
+    })
+);
+app.use(
+    createProxyMiddleware("/admin", {
+        target: "https://igse-energy-tool-frontend.vercel.app",
+    })
+);
+app.use(
+    createProxyMiddleware("/igse", {
+        target: "https://igse-energy-tool-frontend.vercel.app",
+    })
+);
 
 app.get("/", (req, res) => {
     res.status(200).json({

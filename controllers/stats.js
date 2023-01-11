@@ -53,3 +53,61 @@ export const getStats = async (req, res, next) => {
         next(err);
     }
 };
+
+export const getStatsByCustomer = async (req, res, next) => {
+    try {
+        const firebaseApp = firebase.initializeApp(firebaseConfig);
+        const database = getDatabase(firebaseApp);
+        const auth = getAuth();
+        const dbRef = ref(database, "readings/");
+        const snapshot = await get(dbRef);
+        if (snapshot.exists()) {
+            const readings = snapshot.val();
+            const stats = {};
+            for (const customer in readings) {
+                for (const reading_id in readings[customer]) {
+                    const reading = readings[customer][reading_id];
+                    if (!stats[reading.customer_id]) {
+                        stats[reading.customer_id] = {};
+                    }
+                    if (stats[reading.customer_id].day) {
+                        stats[reading.customer_id]["electricity"] += parseFloat(
+                            reading.electricity_meter_reading_day
+                        );
+                    } else {
+                        stats[reading.customer_id]["electricity"] = parseFloat(
+                            reading.electricity_meter_reading_day
+                        );
+                    }
+
+                    if (stats[reading.customer_id]["electricity"]) {
+                        stats[reading.customer_id]["electricity"] += parseFloat(
+                            reading.electricity_meter_reading_night
+                        );
+                    } else {
+                        stats[reading.customer_id]["electricity"] = parseFloat(
+                            reading.electricity_meter_reading_night
+                        );
+                    }
+
+                    if (stats[reading.customer_id]["gas"]) {
+                        stats[reading.customer_id]["gas"] += parseFloat(
+                            reading.gas_meter_reading
+                        );
+                    } else {
+                        stats[reading.customer_id]["gas"] = parseFloat(
+                            reading.gas_meter_reading
+                        );
+                    }
+                }
+            }
+            res.status(200).json(stats);
+        } else {
+            res.status(404).json({
+                message: "Stats not found",
+            });
+        }
+    } catch (err) {
+        next(err);
+    }
+};

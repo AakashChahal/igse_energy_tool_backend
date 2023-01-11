@@ -65,12 +65,15 @@ export const deleteReading = async (req, res, next) => {
 };
 
 export const getReading = async (req, res, next) => {
-    const readingId = req.params.reading_id;
+    const customerId = req.params.customer_id;
     try {
         const firebaseApp = firebase.initializeApp(firebaseConfig);
         const database = getDatabase(firebaseApp);
         const auth = getAuth();
-        const dbRef = ref(database, `readings/${readingId}`);
+        const dbRef = ref(
+            database,
+            `readings/${customerId.split("@")[0].replace(/[.#$\\]/g, "_")}`
+        );
         const snapshot = await get(dbRef);
         if (snapshot.exists()) {
             res.status(200).json({

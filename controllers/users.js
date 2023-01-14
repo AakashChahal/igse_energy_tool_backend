@@ -2,10 +2,11 @@ import * as firebase from "firebase/app";
 import { getDatabase, ref, set, get } from "firebase/database";
 import { getAuth } from "firebase/auth";
 import { firebaseConfig } from "../app.js";
+import User from "../models/user.js";
 
 export const updateUser = async (req, res, next) => {
     const user = req.params.customer_id.split("@")[0].replace(/[.#$\\]/g, "_");
-    const updatedUser = new User({ ...req.body });
+    const updatedUser = { ...req.body };
     try {
         const firebaseApp = firebase.initializeApp(firebaseConfig);
         const database = getDatabase(firebaseApp);

@@ -42,7 +42,7 @@ export const createReading = async (req, res, next) => {
     }
 };
 
-export const deleteReading = async (req, res, next) => {
+export const updateReading = async (req, res, next) => {
     const readingId = req.params.reading_id;
     const customerId = req.params.customer_id;
     try {
@@ -55,10 +55,7 @@ export const deleteReading = async (req, res, next) => {
                 .split("@")[0]
                 .replace(/[.#$\\]/g, "_")}/${readingId}`
         );
-        await remove(dbRef);
-        res.status(200).json({
-            message: "Reading deleted",
-        });
+        await set(dbRef, { ...req.body });
     } catch (err) {
         next(createError(err));
     }
@@ -108,6 +105,9 @@ export const getReadings = async (req, res, next) => {
             });
         }
     } catch (err) {
-        next(createError(err));
+        // next(createError(err));
+        res.status(400).json({
+            message: "Readings not found",
+        });
     }
 };

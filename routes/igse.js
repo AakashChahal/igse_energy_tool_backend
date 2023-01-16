@@ -15,7 +15,7 @@ router.get("/", verifyAdmin, (req, res, next) => {
     });
 });
 
-router.get("/propertyCount", verifyAdmin, countProperties);
+router.get("/propertycount", verifyAdmin, countProperties);
 
 router.get("/:property_type/:numBedrooms", verifyAdmin, calcEnergy);
 
